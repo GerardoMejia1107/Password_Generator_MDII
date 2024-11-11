@@ -12,6 +12,41 @@ function App() {
   const [weakProbability, setWeakProbability] = useState('---'); //Estado que contiene la probabilidad
   const [secureProbability, setSecureProbability] = useState('---'); //Estado que contiene la probabilidad
 
+  const generatePassword = () => {
+    const lowercase = 'abcdefghijklmnopqrstuvwxyz'; //Letras minusculas posibles
+    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; //Letras mayusculas posibles
+    const numbers = '0123456789'; //Digitos posibles
+    const symbols = '!@#$%^&*()_-+=<>?'; //Simbolos posibles (se pueden agregar más)
+
+    //Variable que contiene los caracteres a usar (Campo muestral)
+    let characters = lowercase; //Por defecto se usan las minusculas
+
+    //Se evalua el estado de includeUppercase
+    if (includeUppercase) {
+      characters += uppercase; //Al campo muestral se le agrean las mayusculas
+    }
+    //Se evalua el estado de includeNumbers
+    if (includeNumbers) {
+      characters += numbers; //Al campo muestral se le agrean los numeros
+    }
+    //Se evalua el estado de includeUSymbols
+    if (includeSymbols) {
+      characters += symbols; //Al campo muestral se le agrean los simbolos
+    }
+
+    if (!characters) {
+      characters = lowercase;
+    }
+
+    let password = ''; //Variable que va a contener la contraseña generada
+    //Ya que un string es por defecto un objecto, yo puedo iterar sobre el como un array, y voy agregando de manera aleatorio los caracteres seleccionados del espacio muestral
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      password += characters[randomIndex];
+    }
+
+    setGeneratedPassword(password); //Seteo el estado de la contraseña, a la contraseña generada
+  };
     return (
         <main className="generator-program-container">
             <div className="container">
