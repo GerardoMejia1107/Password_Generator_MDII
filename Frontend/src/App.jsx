@@ -1,8 +1,7 @@
-import './App.css'
-import {useState, useEffect} from 'react'
+import { useState } from 'react';
+import './styles/App.css';
 
 function App() {
-
   const [length, setLength] = useState(8); //Setea el tamaño por defecto de la longitud de la contraseña a generar
   const [includeUppercase, setIncludeUppercase] = useState(false); //Estado de la opcion si incluir mayusculas
   const [includeNumbers, setIncludeNumbers] = useState(false); //Estado de la opcion si incluir numeros
@@ -49,8 +48,8 @@ function App() {
     setGeneratedPassword(password); //Seteo el estado de la contraseña, a la contraseña generada
   };
 
-   //Reseteo los estados
-   const resetInputs = () => {
+  //Reseteo los estados
+  const resetInputs = () => {
     setLength(8);
     setIncludeUppercase(false);
     setIncludeNumbers(false);
@@ -59,8 +58,8 @@ function App() {
     setCombinations('---');
     setWeakProbability('---');
     setSecureProbability('---');
-
   };
+
   //Funcion para copiar la contraseña generada al portapapeles
   const copyToClipboard = () => {
     if (generatedPassword) {
@@ -70,54 +69,87 @@ function App() {
       alert('No hay contraseña generada para copiar');
     }
   };
-    return (
-        <main className="generator-program-container">
-            <div className="container">
-                <div className="config-section">
-                    <h1>Generador de Contraseñas</h1>
-                    <label htmlFor="length">Longitud:</label>
-                    <input type="number" id="length" min="4" max="20"/>
 
+  return (
+    <main className='generator-program-container'>
+      <div className='container'>
+        <div className='config-section'>
+          <h1>Generador de Contraseñas</h1>
+          <label htmlFor='length'>Longitud:</label>
+          <input
+            type='number'
+            id='length'
+            min='4'
+            max='20'
+            value={length}
+            onChange={(e) => setLength(Number(e.target.value))}
+          />
 
-                    <div className="options">
-                        <label><input type="checkbox"/> Mayúsculas</label>
-                        <label><input type="checkbox"/> Números</label>
-                        <label><input type="checkbox"/> Símbolos</label>
-                    </div>
+          <div className='options'>
+            <label>
+              <input
+                type='checkbox'
+                checked={includeUppercase}
+                onChange={() => setIncludeUppercase(!includeUppercase)}
+              />{' '}
+              Mayúsculas
+            </label>
+            <label>
+              <input
+                type='checkbox'
+                checked={includeNumbers}
+                onChange={() => setIncludeNumbers(!includeNumbers)}
+              />{' '}
+              Números
+            </label>
+            <label>
+              <input
+                type='checkbox'
+                checked={includeSymbols}
+                onChange={() => setIncludeSymbols(!includeSymbols)}
+              />{' '}
+              Símbolos
+            </label>
+          </div>
 
-                    <div className="button-group">
-                        <button>Generar</button>
-                        <button>Reiniciar</button>
-                    </div>
-                </div>
+          <div className='button-group'>
+            <button onClick={generatePassword}>Generar</button>
+            <button onClick={resetInputs}>Reiniciar</button>
+          </div>
+        </div>
 
-                <div className="result-section">
-                    <h2>Contraseña Generada:</h2>
-                    <input type="text" readOnly/>
-                    <button>Copiar</button>
+        <div className='result-section'>
+          <h2>Contraseña Generada:</h2>
+          <input type='text' value={generatedPassword} readOnly />
+          <button onClick={copyToClipboard}>Copiar</button>
 
-                    <div className="security-analysis">
-                        <h3>Análisis de Seguridad</h3>
-                        <div className="result-cards">
-                            <div className="result-card">
-                                <i className="fas fa-lock"></i>
-                                <p>Combinaciones: <span>---</span></p>
-                            </div>
-                            <div className="result-card weak">
-                                <i className="fas fa-exclamation-triangle"></i>
-                                <p>Débil: <span>---</span></p>
-                            </div>
-                            <div className="result-card secure">
-                                <i className="fas fa-shield-alt"></i>
-                                <p>Segura: <span>---</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <div className='security-analysis'>
+            <h3>Análisis de Seguridad</h3>
+            <div className='result-cards'>
+              <div className='result-card'>
+                <i className='fas fa-lock'></i>
+                <p>
+                  Combinaciones: <span>{combinations}</span>
+                </p>
+              </div>
+              <div className='result-card weak'>
+                <i className='fas fa-exclamation-triangle'></i>
+                <p>
+                  Débil: <span>{weakProbability}</span>
+                </p>
+              </div>
+              <div className='result-card secure'>
+                <i className='fas fa-shield-alt'></i>
+                <p>
+                  Segura: <span>{secureProbability}</span>
+                </p>
+              </div>
             </div>
-        </main>
-
-    );
+          </div>
+        </div>
+      </div>
+    </main>
+  );
 }
 
 export default App;
