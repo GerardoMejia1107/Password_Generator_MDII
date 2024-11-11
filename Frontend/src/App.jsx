@@ -47,6 +47,20 @@ function App() {
 
     setGeneratedPassword(password); //Seteo el estado de la contraseña, a la contraseña generada
   };
+
+   //Reseteo los estados
+   const resetInputs = () => {
+    setLength(8);
+    setIncludeUppercase(false);
+    setIncludeNumbers(false);
+    setIncludeSymbols(false);
+    setGeneratedPassword('');
+    setCombinations('---');
+    setWeakProbability('---');
+    setSecureProbability('---');
+
+    
+  };
     return (
         <main className="generator-program-container">
             <div className="container">
