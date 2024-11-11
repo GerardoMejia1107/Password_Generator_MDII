@@ -59,7 +59,15 @@ function App() {
     setWeakProbability('---');
     setSecureProbability('---');
 
-    
+  };
+  //Funcion para copiar la contraseña generada al portapapeles
+  const copyToClipboard = () => {
+    if (generatedPassword) {
+      navigator.clipboard.writeText(generatedPassword);
+      alert('Contraseña copiada al portapapeles');
+    } else {
+      alert('No hay contraseña generada para copiar');
+    }
   };
     return (
         <main className="generator-program-container">
