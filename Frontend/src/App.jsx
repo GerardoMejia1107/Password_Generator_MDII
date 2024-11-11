@@ -1,6 +1,17 @@
 import './App.css'
 
 function App() {
+
+  const [length, setLength] = useState(8); //Setea el tamaño por defecto de la longitud de la contraseña a generar
+  const [includeUppercase, setIncludeUppercase] = useState(false); //Estado de la opcion si incluir mayusculas
+  const [includeNumbers, setIncludeNumbers] = useState(false); //Estado de la opcion si incluir numeros
+  const [includeSymbols, setIncludeSymbols] = useState(false); //Estado de la opcion si incluir simbolos
+  const [generatedPassword, setGeneratedPassword] = useState(''); //Estado que contiene la contraseña generada actual
+  const [combinations, setCombinations] = useState('---'); //Estado que contiene el numero de combinaciones posibles a partir de la contraseña generada
+
+  const [weakProbability, setWeakProbability] = useState('---'); //Estado que contiene la probabilidad
+  const [secureProbability, setSecureProbability] = useState('---'); //Estado que contiene la probabilidad
+
     return (
         <main className="generator-program-container">
             <div className="container">
@@ -8,6 +19,7 @@ function App() {
                     <h1>Generador de Contraseñas</h1>
                     <label htmlFor="length">Longitud:</label>
                     <input type="number" id="length" min="4" max="20"/>
+
 
                     <div className="options">
                         <label><input type="checkbox"/> Mayúsculas</label>
