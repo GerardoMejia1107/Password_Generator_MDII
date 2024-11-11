@@ -4,7 +4,15 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [length, setLength] = useState(8); //Setea el tamaño por defecto de la longitud de la contraseña a generar
+  const [includeUppercase, setIncludeUppercase] = useState(false); //Estado de la opcion si incluir mayusculas
+  const [includeNumbers, setIncludeNumbers] = useState(false); //Estado de la opcion si incluir numeros
+  const [includeSymbols, setIncludeSymbols] = useState(false); //Estado de la opcion si incluir simbolos
+  const [generatedPassword, setGeneratedPassword] = useState(''); //Estado que contiene la contraseña generada actual
+  const [combinations, setCombinations] = useState('---'); //Estado que contiene el numero de combinaciones posibles a partir de la contraseña generada
+
+  const [weakProbability, setWeakProbability] = useState('---'); //Estado que contiene la probabilidad
+  const [secureProbability, setSecureProbability] = useState('---'); //Estado que contiene la probabilidad
 
   return (
     <>
