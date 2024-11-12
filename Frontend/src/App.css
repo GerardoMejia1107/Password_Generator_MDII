@@ -1,273 +1,217 @@
-/* General Styles */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
 }
 
 body {
-  background-color: #F4F7F9;
+  font-family: 'Nunito', sans-serif;
+  background-color: #f4f6f9; /* Fondo de la página */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+}
+
+.generator-program-container {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1.5rem;
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem;
+  background: #ffffff; /* Fondo blanco del contenedor principal */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
-.container {
-  display: flex;
-  flex-direction: row;
-  background-color: #FFFFFF;
-  padding: 3rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
-  width: 100%;
-  align-items: flex-start;
-  gap: 3rem;
-}
-
-/* Configuration Section */
 .config-section {
+  grid-column: 1 / 5;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  flex-basis: 40%;
+  gap: 1rem;
 }
 
-h1 {
-  font-family: 'Roboto', sans-serif;
-  color: #2A2F36;
-  font-size: 2.75rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+.result-section {
+  grid-column: 5 / 9;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.security-analysis-section {
+  grid-column: 1 / -1;
+  padding-top: 1.5rem;
+}
+
+.config-section h1 {
+  font-size: 1.8rem;
+  color: #333333;
 }
 
 label {
-  font-size: 1.1rem;
-  color: #3A3F47;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333333;
 }
 
-input[type="number"] {
-  padding: 0.75rem;
-  border: 1px solid #D1D5DB;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+input[type="number"], input[type="text"] {
   width: 100%;
-  font-size: 1.1rem;
-  color: #2A2F36;
+  padding: 0.5rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333333;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .options label {
-  display: block;
-  margin-bottom: 0.75rem;
-  color: #3A3F47;
-  font-size: 1.1rem;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #333333;
 }
 
 .button-group {
   display: flex;
-  gap: 15px;
+  gap: 0.5rem;
 }
 
-button {
-  padding: 0.85rem 1.75rem;
-  background-color: #0366D6;
-  color: white;
+.button-group button {
+  padding: 0.5rem 1rem;
   border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+  color: #ffffff;
+  font-weight: bold;
+  transition: background 0.3s;
 }
 
-button:hover {
-  background-color: #024E9E;
-  transform: scale(1.05);
+.button-group button:first-child {
+  background-color: #007bff; /* Azul para botón de generar */
 }
 
-/* Results Section */
-.result-section {
-  flex-basis: 60%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+.button-group button:first-child:hover {
+  background-color: #0056b3;
 }
 
-.result-section input {
+.button-group button:last-child {
+  background-color: #6c757d; /* Gris para botón de reiniciar */
+}
+
+.button-group button:last-child:hover {
+  background-color: #5a6268;
+}
+
+.result-section h2, .security-analysis-section h3 {
+  font-size: 1.5rem;
+  color: #333333;
+}
+
+.result-section input[type="text"] {
   width: 100%;
-  padding: 1rem;
-  border: 1px solid #D1D5DB;
-  border-radius: 8px;
-  background-color: #F9FAFB;
-  font-size: 1.25rem;
-  margin-bottom: 1.5rem;
-  color: #2A2F36;
+  padding: 0.5rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333333;
 }
 
-.security-analysis {
-  margin-top: 2rem;
-}
-
-.security-analysis h3 {
-  font-size: 1.5rem;
-  color: #2A2F36;
-  margin-bottom: 1rem;
-}
-
-.result-cards {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.result-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #E5E7EB;
-  padding: 1.75rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  flex: 1;
-  text-align: center;
-  transition: background-color 0.3s ease;
-}
-
-.result-card i {
-  font-size: 1.75rem;
-  margin-right: 0.75rem;
-}
-
-.result-card.secure {
-  background-color: #D1FAE5;
-}
-
-.result-card.weak {
-  background-color: #FEE2E2;
-}
-
-#copy-btn {
-  background-color: #10B981;
-  color: white;
-  align-self: flex-start;
-  padding: 0.75rem 1.5rem;
+.result-section button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #ffffff;
   border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+  font-weight: bold;
+  transition: background 0.3s;
 }
 
-#copy-btn:hover {
-  background-color: #059669;
-  transform: scale(1.05);
-}
-
-#reset-btn {
-  background-color: #6B7280;
-}
-
-#reset-btn:hover {
-  background-color: #4B5563;
-}
-
-/* General colors for
-/* General colors for result-cards */
-.result-card.secure {
-  background-color: #D1FAE5; /* Soft green for secure passwords */
-}
-
-.result-card.weak {
-  background-color: #FEE2E2; /* Soft red for weak passwords */
-}
-
-#reset-btn {
-  background-color: #6B7280; /* Neutral gray for reset button */
-}
-
-#reset-btn:hover {
-  background-color: #4B5563; /* Darker gray on hover */
-}
-
-/* General colors for text and buttons */
-h1, h2, h3 {
-  color: #2A2F36; /* Dark neutral for headings */
-}
-
-button {
-  background-color: #0366D6; /* Professional blue for main actions */
-  color: white;
-}
-
-button:hover {
-  background-color: #024E9E; /* Slightly darker on hover */
-}
-
-#copy-btn {
-  background-color: #10B981; /* Green for copy action */
-}
-
-#copy-btn:hover {
-  background-color: #059669; /* Darker green on hover */
-}
-
-/* Spacing and Typography */
-body {
-  background-color: #F4F7F9; /* Soft background for the overall page */
-}
-
-h1 {
-  font-family: 'Roboto', sans-serif;
-  font-size: 2.75rem;
-  font-weight: 700; /* Bold weight for heading */
-}
-
-label, input {
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.1rem;
-  color: #3A3F47; /* Subtle gray for labels and input text */
-}
-
-input {
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid #D1D5DB;
-}
-
-.result-section input {
-  font-size: 1.25rem;
-  padding: 1rem;
-}
-
-.security-analysis h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #2A2F36; /* Match heading color */
+.result-section button:hover {
+  background-color: #0056b3;
 }
 
 .result-cards {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .result-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #E5E7EB;
-  border-radius: 8px;
-  padding: 1.75rem;
-  font-size: 1.2rem; /* Larger font for result cards */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  flex: 1 1 calc(50% - 0.5rem);
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.result-card.permutations {
+  background-color: #e9ecef;
+  color: #333333;
+}
+
+.result-card.secure {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.result-card p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #333333;
+}
+
+.result-card span {
+  font-weight: bold;
+}
+
+
+.security-analysis-section {
+  grid-column: 1 / -1;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.security-analysis-section h3 {
+  font-size: 1.5rem;
+  color: #333333;
+  margin-bottom: 1rem;
+}
+
+.security-table {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.security-table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+  font-size: 1rem;
+  color: #333333;
+}
+
+.security-table tr:nth-child(odd) {
+  background-color: #ffffff; /* Gris claro */
+}
+
+.security-table tr:nth-child(even) {
+  background-color: #eff1f0; /* Verde claro */
+}
+
+.security-table td:first-child {
+  font-weight: bold;
+  color: #555555;
+}
+
+.security-table td:last-child {
+  text-align: right;
+  color: #333333;
 }
