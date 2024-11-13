@@ -1,0 +1,44 @@
+.security-analysis-section {
+  grid-column: 1 / -1;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.security-analysis-section h3 {
+  font-size: 1.5rem;
+  color: #333333;
+  margin-bottom: 1rem;
+}
+
+.security-table {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.security-table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+  font-size: 1rem;
+  color: #333333;
+}
+
+.security-table tr:nth-child(odd) {
+  background-color: #ffffff; /* Gris claro */
+}
+
+.security-table tr:nth-child(even) {
+  background-color: #eff1f0; /* Verde claro */
+}
+
+.security-table td:first-child {
+  font-weight: bold;
+  color: #555555;
+}
+
+.security-table td:last-child {
+  text-align: right;
+  color: #333333;
+}

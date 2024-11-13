@@ -16,6 +16,7 @@ import {
 } from './utils/formulas';
 
 import { copyToClipboard } from './utils/tools';
+import Table from './components/Table/index';
 
 function App() {
   const [length, setLength] = useState(8);
@@ -167,56 +168,20 @@ function App() {
         {generatedPassword.length > 0 ? (
           <>
             <h3>Análisis de Seguridad</h3>
-            <table className='security-table'>
-              <tbody>
-                <tr>
-                  <td>Permutaciones:</td>
-                  <td>{permutations}</td>
-                </tr>
-                <tr>
-                  <td>P(Encontrar en 1 intento):</td>
-                  <td>{secureProbability}</td>
-                </tr>
-                <tr>
-                  <td>Entropía:</td>
-                  <td>{entropy}</td>
-                </tr>
-                <tr>
-                  <td>Seguridad:</td>
-                  <td>{security}</td>
-                </tr>
-                <tr>
-                  <td>Probabilidad de ser descifrada en 100,000 intentos:</td>
-                  <td>{probability100k}</td>
-                </tr>
-                <tr>
-                  <td>
-                    Probabilidad de ser descifrada en 1 millón de intentos:
-                  </td>
-                  <td>{probability1M}</td>
-                </tr>
-                <tr>
-                  <td>
-                    Probabilidad de ser descifrada en 10 millones de intentos:
-                  </td>
-                  <td>{probability10M}</td>
-                </tr>
-                <tr>
-                  <td>Tiempo estimado de descifrado (1,000 intentos/s):</td>
-                  <td>{timeToCrack.low}</td>
-                </tr>
-                <tr>
-                  <td>Tiempo estimado de descifrado (1 millón intentos/s):</td>
-                  <td>{timeToCrack.medium}</td>
-                </tr>
-                <tr>
-                  <td>
-                    Tiempo estimado de descifrado (10 millones intentos/s):
-                  </td>
-                  <td>{timeToCrack.high}</td>
-                </tr>
-              </tbody>
-            </table>
+            <Table
+              data={{
+                permutations: permutations,
+                secureProbability: secureProbability,
+                entropy: entropy,
+                security: security,
+                probability100k: probability100k,
+                probability1M: probability1M,
+                probability10M: probability10M,
+                timeToCrackLow: timeToCrack.low,
+                timeToCrackMedium: timeToCrack.medium,
+                timeToCrackHigh: timeToCrack.high,
+              }}
+            />
           </>
         ) : (
           ''
