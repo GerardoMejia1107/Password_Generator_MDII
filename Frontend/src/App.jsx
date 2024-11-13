@@ -5,26 +5,17 @@ import {
   uppercasePool,
   symbolsPool,
   numbersPool,
-  THRESHOLD,
 } from './config/bases';
 
 import {
-  REALLY_WEAK,
-  WEAK,
-  RAZONABLE,
-  STRONG,
-  REALLY_STRONG,
-} from './config/secureType';
+  calcEntropy,
+  categorizeSecurity,
+  calculateProbability,
+  calculateTimeToCrack,
+  formatProbability,
+} from './utils/formulas';
 
-import {
-  BITS_28,
-  BITS_29,
-  BITS_35,
-  BITS_36,
-  BITS_59,
-  BITS_60,
-  BITS_127,
-} from './config/bitsEntropy.js';
+import { copyToClipboard } from './utils/tools';
 
 function App() {
   const [length, setLength] = useState(8);
@@ -105,68 +96,6 @@ function App() {
     setTimeToCrack('');
   };
 
-  const copyToClipboard = () => {
-    if (generatedPassword) {
-      navigator.clipboard.writeText(generatedPassword);
-      alert('Contraseña copiada al portapapeles');
-    } else {
-      alert('No hay contraseña generada para copiar');
-    }
-  };
-
-  const calcEntropy = (passwordLength, totalPool) => {
-    return passwordLength * Math.log2(totalPool);
-  };
-
-  const categorizeSecurity = (entropyValue) => {
-    if (entropyValue < BITS_28) {
-      return REALLY_WEAK;
-    } else if (entropyValue >= BITS_29 && entropyValue <= BITS_35) {
-      return WEAK;
-    } else if (entropyValue >= BITS_36 && entropyValue <= BITS_59) {
-      return RAZONABLE;
-    } else if (entropyValue >= BITS_60 && entropyValue <= BITS_127) {
-      return STRONG;
-    } else {
-      return REALLY_STRONG;
-    }
-  };
-
-  const calculateProbability = (totalCombinations, attempts) => {
-    return 1 - Math.pow(1 - 1 / totalCombinations, attempts);
-  };
-
-  const formatProbability = (probability) => {
-    return probability < THRESHOLD
-      ? 'Casi imposible'
-      : probability.toExponential(2);
-  };
-
-  // Calcula el tiempo estimado para ser descubierto basado en intentos por segundo
-  const calculateTimeToCrack = (totalCombinations) => {
-    const attempts1000 = totalCombinations / 1000; // 1,000 intentos/segundo
-    const attempts1M = totalCombinations / 1_000_000; // 1,000,000 intentos/segundo
-    const attempts1B = totalCombinations / 1_000_000_000; // 1,000,000,000 intentos/segundo
-
-    const formatTime = (seconds) => {
-      if (seconds < 60) return `${seconds.toFixed(2)} segundos`;
-      const minutes = seconds / 60;
-      if (minutes < 60) return `${minutes.toFixed(2)} minutos`;
-      const hours = minutes / 60;
-      if (hours < 24) return `${hours.toFixed(2)} horas`;
-      const days = hours / 24;
-      if (days < 365) return `${days.toFixed(2)} días`;
-      const years = days / 365;
-      return `${years.toFixed(2)} años`;
-    };
-
-    return {
-      low: formatTime(attempts1000),
-      medium: formatTime(attempts1M),
-      high: formatTime(attempts1B),
-    };
-  };
-
   return (
     <main className='generator-program-container'>
       <section className='config-section'>
@@ -225,58 +154,73 @@ function App() {
       <section className='result-section'>
         <h2>Contraseña Generada:</h2>
         <input type='text' value={generatedPassword} readOnly />
-        <button onClick={copyToClipboard}>Copiar</button>
+        <button
+          onClick={() => {
+            copyToClipboard(generatedPassword);
+          }}
+        >
+          Copiar
+        </button>
       </section>
 
       <section className='security-analysis-section'>
-        <h3>Análisis de Seguridad</h3>
-
-        <table className='security-table'>
-          <tbody>
-            <tr>
-              <td>Permutaciones:</td>
-              <td>{permutations}</td>
-            </tr>
-            <tr>
-              <td>P(Encontrar en 1 intento):</td>
-              <td>{secureProbability}</td>
-            </tr>
-            <tr>
-              <td>Entropía:</td>
-              <td>{entropy}</td>
-            </tr>
-            <tr>
-              <td>Seguridad:</td>
-              <td>{security}</td>
-            </tr>
-            <tr>
-              <td>Probabilidad de ser descifrada en 100,000 intentos:</td>
-              <td>{probability100k}</td>
-            </tr>
-            <tr>
-              <td>Probabilidad de ser descifrada en 1 millón de intentos:</td>
-              <td>{probability1M}</td>
-            </tr>
-            <tr>
-              <td>
-                Probabilidad de ser descifrada en 10 millones de intentos:
-              </td>
-              <td>{probability10M}</td>
-            </tr>
-            <tr>
-              <td>Tiempo estimado de descifrado (1,000 intentos/s):</td>
-              <td>{timeToCrack.low}</td>
-            </tr>
-            <tr>
-              <td>Tiempo estimado de descifrado (1 millón intentos/s):</td>
-              <td>{timeToCrack.medium}</td>
-            </tr>
-            <tr>
-              <td>Tiempo estimado de descifrado (1 billón intentos/s):</td>
-              <td>{timeToCrack.high}</td>
-            </tr>
-          </tbody>
-        </table>
+        {generatedPassword.length > 0 ? (
+          <>
+            <h3>Análisis de Seguridad</h3>
+            <table className='security-table'>
+              <tbody>
+                <tr>
+                  <td>Permutaciones:</td>
+                  <td>{permutations}</td>
+                </tr>
+                <tr>
+                  <td>P(Encontrar en 1 intento):</td>
+                  <td>{secureProbability}</td>
+                </tr>
+                <tr>
+                  <td>Entropía:</td>
+                  <td>{entropy}</td>
+                </tr>
+                <tr>
+                  <td>Seguridad:</td>
+                  <td>{security}</td>
+                </tr>
+                <tr>
+                  <td>Probabilidad de ser descifrada en 100,000 intentos:</td>
+                  <td>{probability100k}</td>
+                </tr>
+                <tr>
+                  <td>
+                    Probabilidad de ser descifrada en 1 millón de intentos:
+                  </td>
+                  <td>{probability1M}</td>
+                </tr>
+                <tr>
+                  <td>
+                    Probabilidad de ser descifrada en 10 millones de intentos:
+                  </td>
+                  <td>{probability10M}</td>
+                </tr>
+                <tr>
+                  <td>Tiempo estimado de descifrado (1,000 intentos/s):</td>
+                  <td>{timeToCrack.low}</td>
+                </tr>
+                <tr>
+                  <td>Tiempo estimado de descifrado (1 millón intentos/s):</td>
+                  <td>{timeToCrack.medium}</td>
+                </tr>
+                <tr>
+                  <td>
+                    Tiempo estimado de descifrado (10 millones intentos/s):
+                  </td>
+                  <td>{timeToCrack.high}</td>
+                </tr>
+              </tbody>
+            </table>
+          </>
+        ) : (
+          ''
+        )}
       </section>
     </main>
   );
