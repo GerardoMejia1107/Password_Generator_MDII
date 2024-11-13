@@ -1,42 +1,218 @@
-#root {
-  max-width: 1280px;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #f4f6f9; /* Fondo de la página */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.generator-program-container {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1.5rem;
+  width: 80%;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  background: #ffffff; /* Fondo blanco del contenedor principal */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.config-section {
+  grid-column: 1 / 5;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.result-section {
+  grid-column: 5 / 9;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.security-analysis-section {
+  grid-column: 1 / -1;
+  padding-top: 1.5rem;
+}
+
+.config-section h1 {
+  font-size: 1.8rem;
+  color: #333333;
+}
+
+label {
+  font-weight: bold;
+  color: #333333;
+}
+
+input[type="number"], input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333333;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.options label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #333333;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button-group button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.button-group button:first-child {
+  background-color: #007bff; /* Azul para botón de generar */
+}
+
+.button-group button:first-child:hover {
+  background-color: #0056b3;
+}
+
+.button-group button:last-child {
+  background-color: #6c757d; /* Gris para botón de reiniciar */
+}
+
+.button-group button:last-child:hover {
+  background-color: #5a6268;
+}
+
+.result-section h2, .security-analysis-section h3 {
+  font-size: 1.5rem;
+  color: #333333;
+}
+
+.result-section input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333333;
+}
+
+.result-section button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.result-section button:hover {
+  background-color: #0056b3;
+}
+
+.result-cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.result-card {
+  flex: 1 1 calc(50% - 0.5rem);
+  padding: 1rem;
+  border-radius: 6px;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.result-card.permutations {
+  background-color: #e9ecef;
+  color: #333333;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.result-card.secure {
+  background-color: #d4edda;
+  color: #155724;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.result-card p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #333333;
 }
 
-.card {
-  padding: 2em;
+.result-card span {
+  font-weight: bold;
 }
 
-.read-the-docs {
-  color: #888;
+
+.security-analysis-section {
+  grid-column: 1 / -1;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.security-analysis-section h3 {
+  font-size: 1.5rem;
+  color: #333333;
+  margin-bottom: 1rem;
+}
+
+.security-table {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.security-table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+  font-size: 1rem;
+  color: #333333;
+}
+
+.security-table tr:nth-child(odd) {
+  background-color: #ffffff; /* Gris claro */
+}
+
+.security-table tr:nth-child(even) {
+  background-color: #eff1f0; /* Verde claro */
+}
+
+.security-table td:first-child {
+  font-weight: bold;
+  color: #555555;
+}
+
+.security-table td:last-child {
+  text-align: right;
+  color: #333333;
 }
