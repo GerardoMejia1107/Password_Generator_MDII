@@ -1,5 +1,30 @@
 import { useState } from 'react';
 import './App.css';
+import {
+  lowercasePool,
+  uppercasePool,
+  symbolsPool,
+  numbersPool,
+  THRESHOLD,
+} from './config/bases';
+
+import {
+  REALLY_WEAK,
+  WEAK,
+  RAZONABLE,
+  STRONG,
+  REALLY_STRONG,
+} from './config/secureType';
+
+import {
+  BITS_28,
+  BITS_29,
+  BITS_35,
+  BITS_36,
+  BITS_59,
+  BITS_60,
+  BITS_127,
+} from './config/bitsEntropy.js';
 
 function App() {
   const [length, setLength] = useState(8);
@@ -8,7 +33,7 @@ function App() {
   const [includeNumbers, setIncludeNumbers] = useState(false);
   const [includeSymbols, setIncludeSymbols] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState('');
-  const [combinations, setCombinations] = useState('');
+  const [permutations, setPermutations] = useState('');
   const [secureProbability, setSecureProbability] = useState('');
   const [entropy, setEntropy] = useState('');
   const [security, setSecurity] = useState('');
@@ -17,20 +42,13 @@ function App() {
   const [probability10M, setProbability10M] = useState('');
   const [timeToCrack, setTimeToCrack] = useState('');
 
-  const THRESHOLD = 1e-15; // Umbral mínimo para mostrar probabilidades muy pequeñas
-
   const generatePassword = () => {
-    const lowercase = 'abcdefghijklmnñopqrstuvwxyz';
-    const uppercase = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
-    const numbers = '0123456789';
-    const symbols = '!@#$%^&*()_+-=[]{}|;:\'",.<>?/`~\\©®£¥€\n';
-
     let characters = ''; // Inicia como cadena vacía
 
-    if (includeLowerCase) characters += lowercase;
-    if (includeUppercase) characters += uppercase;
-    if (includeNumbers) characters += numbers;
-    if (includeSymbols) characters += symbols;
+    if (includeLowerCase) characters += lowercasePool;
+    if (includeUppercase) characters += uppercasePool;
+    if (includeNumbers) characters += numbersPool;
+    if (includeSymbols) characters += symbolsPool;
 
     if (characters.length === 0) {
       alert('Selecciona al menos una opción de caracteres');
@@ -46,9 +64,9 @@ function App() {
     setGeneratedPassword(password);
 
     // Calcula combinaciones y probabilidad
-    const totalCombinations = Math.pow(characters.length, length);
-    setCombinations(totalCombinations.toLocaleString());
-    setSecureProbability((1 / totalCombinations).toExponential(2));
+    const totalPermutations = Math.pow(characters.length, length);
+    setPermutations(totalPermutations.toLocaleString());
+    setSecureProbability((1 / totalPermutations).toExponential(2));
 
     // Calcula entropía y clasifica la seguridad
     const entropyValue = calcEntropy(length, characters.length);
@@ -56,12 +74,18 @@ function App() {
     setSecurity(categorizeSecurity(entropyValue));
 
     // Calcula probabilidades de ser descifrada en diferentes intentos usando la fórmula correcta
-    setProbability100k(formatProbability(calculateProbability(totalCombinations, 100000)));
-    setProbability1M(formatProbability(calculateProbability(totalCombinations, 1000000)));
-    setProbability10M(formatProbability(calculateProbability(totalCombinations, 10000000)));
+    setProbability100k(
+      formatProbability(calculateProbability(totalPermutations, 100000)),
+    );
+    setProbability1M(
+      formatProbability(calculateProbability(totalPermutations, 1000000)),
+    );
+    setProbability10M(
+      formatProbability(calculateProbability(totalPermutations, 10000000)),
+    );
 
     // Calcula tiempo estimado para ser descubierta
-    setTimeToCrack(calculateTimeToCrack(totalCombinations));
+    setTimeToCrack(calculateTimeToCrack(totalPermutations));
   };
 
   const resetInputs = () => {
@@ -71,7 +95,7 @@ function App() {
     setIncludeNumbers(false);
     setIncludeSymbols(false);
     setGeneratedPassword('');
-    setCombinations('');
+    setPermutations('');
     setSecureProbability('');
     setEntropy('');
     setSecurity('');
@@ -95,25 +119,27 @@ function App() {
   };
 
   const categorizeSecurity = (entropyValue) => {
-    if (entropyValue < 28) {
-      return 'Muy Débil';
-    } else if (entropyValue >= 28 && entropyValue <= 35) {
-      return 'Débil';
-    } else if (entropyValue >= 36 && entropyValue <= 59) {
-      return 'Razonable';
-    } else if (entropyValue >= 60 && entropyValue <= 127) {
-      return 'Fuerte';
+    if (entropyValue < BITS_28) {
+      return REALLY_WEAK;
+    } else if (entropyValue >= BITS_29 && entropyValue <= BITS_35) {
+      return WEAK;
+    } else if (entropyValue >= BITS_36 && entropyValue <= BITS_59) {
+      return RAZONABLE;
+    } else if (entropyValue >= BITS_60 && entropyValue <= BITS_127) {
+      return STRONG;
     } else {
-      return 'Muy Fuerte';
+      return REALLY_STRONG;
     }
   };
 
   const calculateProbability = (totalCombinations, attempts) => {
-    return 1 - Math.pow(1 - (1 / totalCombinations), attempts);
+    return 1 - Math.pow(1 - 1 / totalCombinations, attempts);
   };
 
   const formatProbability = (probability) => {
-    return probability < THRESHOLD ? "Casi imposible" : probability.toExponential(2);
+    return probability < THRESHOLD
+      ? 'Casi imposible'
+      : probability.toExponential(2);
   };
 
   // Calcula el tiempo estimado para ser descubierto basado en intentos por segundo
@@ -209,7 +235,7 @@ function App() {
           <tbody>
             <tr>
               <td>Permutaciones:</td>
-              <td>{combinations}</td>
+              <td>{permutations}</td>
             </tr>
             <tr>
               <td>P(Encontrar en 1 intento):</td>
@@ -232,7 +258,9 @@ function App() {
               <td>{probability1M}</td>
             </tr>
             <tr>
-              <td>Probabilidad de ser descifrada en 10 millones de intentos:</td>
+              <td>
+                Probabilidad de ser descifrada en 10 millones de intentos:
+              </td>
               <td>{probability10M}</td>
             </tr>
             <tr>
