@@ -13,6 +13,7 @@ import {
   calculateProbability,
   calculateTimeToCrack,
   formatProbability,
+  conditionalProbability,
 } from './utils/formulas';
 
 import { copyToClipboard } from './utils/tools';
@@ -29,13 +30,14 @@ function App() {
   const [secureProbability, setSecureProbability] = useState('');
   const [entropy, setEntropy] = useState('');
   const [security, setSecurity] = useState('');
-  const [probability100k, setProbability100k] = useState('');
-  const [probability1M, setProbability1M] = useState('');
+  const [probability1k, setProbability1k] = useState('');
   const [probability10M, setProbability10M] = useState('');
+  const [probabilitySpanishSpecial, setProbabilitySpanishSpecial] =
+    useState('');
   const [timeToCrack, setTimeToCrack] = useState('');
 
   const generatePassword = () => {
-    let characters = ''; // Inicia como cadena vacía
+    let characters = ''; 
 
     if (includeLowerCase) characters += lowercasePool;
     if (includeUppercase) characters += uppercasePool;
@@ -66,15 +68,25 @@ function App() {
     setSecurity(categorizeSecurity(entropyValue));
 
     // Calcula probabilidades de ser descifrada en diferentes intentos usando la fórmula correcta
-    setProbability100k(
-      formatProbability(calculateProbability(totalPermutations, 100000)),
+    setProbability1k(
+      formatProbability(calculateProbability(totalPermutations, 1000)),
     );
-    setProbability1M(
-      formatProbability(calculateProbability(totalPermutations, 1000000)),
-    );
+
     setProbability10M(
       formatProbability(calculateProbability(totalPermutations, 10000000)),
     );
+
+    if (password.includes('ñ') || password.includes('Ñ')) {
+      setProbabilitySpanishSpecial(
+        conditionalProbability(
+          length,
+          characters.length,
+          secureProbability,
+        ).toExponential(2),
+      );
+    } else {
+      setProbabilitySpanishSpecial('');
+    }
 
     // Calcula tiempo estimado para ser descubierta
     setTimeToCrack(calculateTimeToCrack(totalPermutations));
@@ -91,10 +103,10 @@ function App() {
     setSecureProbability('');
     setEntropy('');
     setSecurity('');
-    setProbability100k('');
-    setProbability1M('');
+    setProbability1k('');
     setProbability10M('');
     setTimeToCrack('');
+    setProbabilitySpanishSpecial('');
   };
 
   return (
@@ -172,13 +184,12 @@ function App() {
               data={{
                 permutations: permutations,
                 secureProbability: secureProbability,
+                probabilitySpanishSpecial: probabilitySpanishSpecial,
                 entropy: entropy,
                 security: security,
-                probability100k: probability100k,
-                probability1M: probability1M,
+                probability1k: probability1k,
                 probability10M: probability10M,
                 timeToCrackLow: timeToCrack.low,
-                timeToCrackMedium: timeToCrack.medium,
                 timeToCrackHigh: timeToCrack.high,
               }}
             />
