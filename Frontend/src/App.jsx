@@ -26,7 +26,7 @@ function App() {
   const [includeNumbers, setIncludeNumbers] = useState(false);
   const [includeSymbols, setIncludeSymbols] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState('');
-  const [permutations, setPermutations] = useState('');
+  const [combinations, setCombinations] = useState('');
   const [secureProbability, setSecureProbability] = useState('');
   const [entropy, setEntropy] = useState('');
   const [security, setSecurity] = useState('');
@@ -36,49 +36,52 @@ function App() {
     useState('');
   const [timeToCrack, setTimeToCrack] = useState('');
 
+  //Función encargada  de generar y llamar a todas las funciones que me dan el registro de seguridad con las probabilidades, entropia, tiempo estimado, etc..
   const generatePassword = () => {
-    let characters = ''; 
+    let characters = ''; //Estado inicial del espacio muestral
 
-    if (includeLowerCase) characters += lowercasePool;
-    if (includeUppercase) characters += uppercasePool;
-    if (includeNumbers) characters += numbersPool;
-    if (includeSymbols) characters += symbolsPool;
+    if (includeLowerCase) characters += lowercasePool; //Se le suma el espacio muestral de las minusculas
+    if (includeUppercase) characters += uppercasePool; //Se le suma el espacio muestral de las mayusculas
+    if (includeNumbers) characters += numbersPool; //Se le suma el espacio muestral de los numeros
+    if (includeSymbols) characters += symbolsPool; //Se le suma el espacio muestral de los simbolos
 
+    //Se verifica que se ha seleccionado algun pool de caracteres (minusculas, mayusculas, numeros o simbolos)
     if (characters.length === 0) {
       alert('Selecciona al menos una opción de caracteres');
       return;
     }
 
-    let password = '';
+    let password = ''; //Estado inicial que contiene la contraseña generada para el usuario
     for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      password += characters[randomIndex];
+      const randomIndex = Math.floor(Math.random() * characters.length); //Se generan numeros que serán los index aleatorios para seleccionar elementos del espacio muestral total
+      password += characters[randomIndex]; //Se escogen elementos del espacio muestral total, con el randomIndex
     }
 
-    setGeneratedPassword(password);
+    setGeneratedPassword(password); //Seteamos la contraseña generada
 
     // Calcula combinaciones y probabilidad
-    const totalPermutations = Math.pow(characters.length, length);
-    setPermutations(totalPermutations.toLocaleString());
-    setSecureProbability((1 / totalPermutations).toExponential(2));
+    const totalCombinations = Math.pow(characters.length, length); //Calculo total de las combinaciones posibles con repeticion
+    setCombinations(totalCombinations.toLocaleString()); //Seteamos las combinaciones totales calculadas
+    setSecureProbability((1 / totalCombinations).toExponential(2)); //Se calcula la probabilidad de exito en general
 
     // Calcula entropía y clasifica la seguridad
-    const entropyValue = calcEntropy(length, characters.length);
-    setEntropy(entropyValue.toFixed(2));
-    setSecurity(categorizeSecurity(entropyValue));
+    const entropyValue = calcEntropy(length, characters.length); //Calculo de la entropia
+    setEntropy(entropyValue.toFixed(2)); //Seteamos el valor de la entropia
+    setSecurity(categorizeSecurity(entropyValue)); //Seteamos la categorizacion de la seguridad de la contraseña
 
-    // Calcula probabilidades de ser descifrada en diferentes intentos usando la fórmula correcta
+    // Calcula probabilidades de ser descifrada en diferentes intentos
     setProbability1k(
-      formatProbability(calculateProbability(totalPermutations, 1000)),
+      formatProbability(calculateProbability(totalCombinations, 1000)), //Calculo de la probabilidad acumulativa para 1,000 intentos posteriores
     );
 
     setProbability10M(
-      formatProbability(calculateProbability(totalPermutations, 10000000)),
+      formatProbability(calculateProbability(totalCombinations, 10000000)), //Calculo de la probabilidad acumulativa para 10,000,000 intentos posteriores
     );
 
+    //Verifiacion para deducir si la contraseña generada contiene "ñ || Ñ"
     if (password.includes('ñ') || password.includes('Ñ')) {
       setProbabilitySpanishSpecial(
-        conditionalProbability(
+        conditionalProbability( //Calculamos la probabilidad condicional: Probabilidad que el atacante descifre la contraseña dado que la ñ esta incluida
           length,
           characters.length,
           secureProbability,
@@ -89,9 +92,10 @@ function App() {
     }
 
     // Calcula tiempo estimado para ser descubierta
-    setTimeToCrack(calculateTimeToCrack(totalPermutations));
+    setTimeToCrack(calculateTimeToCrack(totalCombinations)); //Calulo del tiempo estimado del descifrado de la clave
   };
 
+  //Funcion para resetear todos los inputs
   const resetInputs = () => {
     setLength(8);
     setIncludeUppercase(false);
@@ -99,7 +103,7 @@ function App() {
     setIncludeNumbers(false);
     setIncludeSymbols(false);
     setGeneratedPassword('');
-    setPermutations('');
+    setCombinations('');
     setSecureProbability('');
     setEntropy('');
     setSecurity('');
@@ -182,7 +186,7 @@ function App() {
             <h3>Análisis de Seguridad</h3>
             <Table
               data={{
-                permutations: permutations,
+                permutations: combinations,
                 secureProbability: secureProbability,
                 probabilitySpanishSpecial: probabilitySpanishSpecial,
                 entropy: entropy,
